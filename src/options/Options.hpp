@@ -27,8 +27,8 @@ namespace Options
         using opts_t = std::vector<Option>;
         using pos_t  = std::vector<std::string>;
 
-        const Option          &find_option_by_name(const std::string &) const;
-        opts_t::iterator       find_option_with_dashes(const std::string &);
+        const Option    &find_option_by_name(const std::string &) const;
+        opts_t::iterator find_option_with_dashes(const std::string &);
 
         opts_t                   _options;
         std::vector<std::string> _positional;
