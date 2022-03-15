@@ -8,7 +8,7 @@ The main design criteria were:
 * ease of declaring options and accessing them,
 * only C++11 or higher
 
-An example with comments can be found in src/example/example.cpp.
+An example with comments can be found in [src/example/example.cpp](src/example/example.cpp).
 
 Some notes:
 
