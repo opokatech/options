@@ -35,6 +35,11 @@ TEST_CASE("Option")
             REQUIRE(o.has_default_value());
             REQUIRE_FALSE(o.was_found());
             REQUIRE(o.as_string() == "bla");
+
+            o.default_value("10");
+            REQUIRE(o.has_default_value());
+            REQUIRE(o.as_string() == "10");
+            REQUIRE(o.as_int() == 10);
         }
     }
 

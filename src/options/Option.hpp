@@ -55,21 +55,12 @@ namespace Options
         bool is_mandatory() const { return _mandatory; }
         bool has_default_value() const { return !_default_value.empty(); }
 
-        bool set_value(const std::string &v)
-        {
-            if (_validator != nullptr)
-                if (!_validator(v))
-                    return false;
-
-            _found = true;
-            _value = v;
-            return true;
-        }
+        bool set_value(const std::string &v);
 
         static int32_t     as_int(const std::string &);
-        int32_t            as_int() const { return as_int(_value); }
+        int32_t            as_int() const;
         static double      as_double(const std::string &);
-        double             as_double() const { return as_double(_value); }
+        double             as_double() const;
         static bool        as_bool(const std::string &);
         bool               as_bool() const;
         const std::string &as_string() const;

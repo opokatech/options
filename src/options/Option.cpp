@@ -4,6 +4,19 @@
 
 namespace Options
 {
+    bool Option::set_value(const std::string &v)
+    {
+        if (_validator != nullptr)
+            if (!_validator(v))
+                return false;
+
+        _found = true;
+        _value = v;
+        return true;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
     int32_t Option::as_int(const std::string &v)
     {
         return static_cast<int32_t>(std::strtol(v.c_str(), nullptr, 10));
@@ -11,7 +24,27 @@ namespace Options
 
     // ---------------------------------------------------------------------------------------------
 
+    int32_t Option::as_int() const
+    {
+        if (was_found())
+            return as_int(_value);
+
+        return as_int(_default_value);
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
     double Option::as_double(const std::string &v) { return std::strtod(v.c_str(), nullptr); }
+
+    // ---------------------------------------------------------------------------------------------
+
+    double Option::as_double() const
+    {
+        if (was_found())
+            return as_double(_value);
+
+        return as_double(_default_value);
+    }
 
     // ---------------------------------------------------------------------------------------------
 
