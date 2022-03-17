@@ -27,10 +27,11 @@ namespace Options
         using opts_t = std::vector<Option>;
         using pos_t  = std::vector<std::string>;
 
-        const Option    &find_option_by_name(const std::string &) const;
-        opts_t::iterator find_option_with_dashes(const std::string &);
+        opts_t::const_iterator find_option_by_long_name(const std::string &) const;
+        opts_t::iterator       find_option_by_name_with_dashes(const std::string &);
 
         opts_t                   _options;
+        uint32_t                 _longest_option_name = 0;
         std::vector<std::string> _positional;
     };
 } // namespace Options

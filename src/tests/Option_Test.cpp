@@ -15,6 +15,12 @@ TEST_CASE("Option")
         REQUIRE_FALSE(o.is_mandatory());
         REQUIRE_FALSE(o.has_default_value());
         REQUIRE_FALSE(o.was_found());
+
+        REQUIRE(o.as_int() == 0);
+        REQUIRE(o.as_uint() == 0);
+        REQUIRE(o.as_double() == 0.0);
+        REQUIRE(o.as_bool() == false);
+        REQUIRE(o.as_string().empty());
     }
 
     SECTION("Simple initialization with short option")
@@ -29,17 +35,66 @@ TEST_CASE("Option")
         REQUIRE_FALSE(o.has_default_value());
         REQUIRE_FALSE(o.was_found());
 
-        SECTION("Using default value for not found option")
+        REQUIRE(o.as_int() == 0);
+        REQUIRE(o.as_uint() == 0);
+        REQUIRE(o.as_double() == 0.0);
+        REQUIRE(o.as_bool() == false);
+        REQUIRE(o.as_string().empty());
+
+        SECTION("Using default textual value for not found option")
         {
-            o.default_value("bla");
+            o.takes_optional_argument_with_default("bla");
+
             REQUIRE(o.has_default_value());
             REQUIRE_FALSE(o.was_found());
-            REQUIRE(o.as_string() == "bla");
 
-            o.default_value("10");
+            REQUIRE(o.as_int() == 0);
+            REQUIRE(o.as_uint() == 0);
+            REQUIRE(o.as_double() == 0.0);
+            REQUIRE(o.as_bool() == false);
+            REQUIRE(o.as_string() == "bla");
+        }
+
+        SECTION("Using default positive int for not found option")
+        {
+            o.takes_optional_argument_with_default("5");
+
             REQUIRE(o.has_default_value());
-            REQUIRE(o.as_string() == "10");
-            REQUIRE(o.as_int() == 10);
+            REQUIRE_FALSE(o.was_found());
+
+            REQUIRE(o.as_int() == 5);
+            REQUIRE(o.as_uint() == 5);
+            REQUIRE(o.as_double() == 5.0);
+            REQUIRE(o.as_bool() == true); // non-zero value
+            REQUIRE(o.as_string() == "5");
+        }
+
+        SECTION("Using default double for not found option")
+        {
+            o.takes_optional_argument_with_default("3.14");
+
+            REQUIRE(o.has_default_value());
+            REQUIRE_FALSE(o.was_found());
+
+            REQUIRE(o.as_int() == 3);
+            REQUIRE(o.as_uint() == 3);
+            REQUIRE(o.as_double() == 3.14);
+            REQUIRE(o.as_bool() == true);
+            REQUIRE(o.as_string() == "3.14");
+        }
+
+        SECTION("Using default bool for not found option")
+        {
+            o.takes_optional_argument_with_default("true");
+
+            REQUIRE(o.has_default_value());
+            REQUIRE_FALSE(o.was_found());
+
+            REQUIRE(o.as_int() == 0);
+            REQUIRE(o.as_uint() == 0);
+            REQUIRE(o.as_double() == 0.0);
+            REQUIRE(o.as_bool() == true);
+            REQUIRE(o.as_string() == "true");
         }
     }
 
@@ -47,7 +102,7 @@ TEST_CASE("Option")
     {
         Options::Option o("opt", "some description");
 
-        o.default_value("bla");
+        o.takes_optional_argument_with_default("bla");
         REQUIRE_FALSE(o.was_found());
         REQUIRE(o.as_string() == "bla"); // was not found, so returning default
 

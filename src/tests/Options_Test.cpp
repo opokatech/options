@@ -16,11 +16,10 @@ TEST_CASE("Options")
     SECTION("Parsing")
     {
         o.add({"mode", "Operation mode. Valid are: fast, slow."})
-            .argument()
-            .mandatory()
+            .takes_mandatory_argument()
             .validator([](const std::string &v) { return (v == "fast" || v == "slow"); });
 
-        o.add({"mode2", 'm', "Bla bla"}).argument();
+        o.add({"mode2", 'm', "Bla bla"}).takes_optional_argument_with_default("");
         o.add({"only_long", "flag with only long option visible"});
         o.add({"verbose", 'v', "flag with both short and long option"});
 

@@ -12,32 +12,30 @@ int main(int argc, char *argv[])
     o.add({"help", 'h', "This help is accessible via short and long option"});
     o.add({"verbose", 'v', "Verbose - accessible via -v and --verbose"});
     o.add({"dlevel", "Debug level, one of none, debug, error - it is checked by the validator"})
-        .default_value("none") // has non-empty default
-        .argument()            // needs and argument
+        .takes_optional_argument_with_default("none")
         .validator(
             [](const std::string &v) { return (v == "none" || v == "debug" || v == "error"); });
 
-    o.add({"config", 'c', "Configuration file"}).mandatory().argument();
+    o.add({"config", 'c', "Configuration file"}).takes_mandatory_argument();
     o.add({"int", 'i', "Some small integer in range <-10..10> as checked by validator"})
-        .default_value("4")
-        .argument()
+        .takes_optional_argument_with_default("4")
         .validator([](const std::string &s) {
             int32_t i = Options::Option::as_int(s);
             return i >= -10 && i <= 10;
         });
     o.add({"double", 'd', "Double value > 3.0"})
-        .default_value("3.14")
-        .argument()
+        .takes_optional_argument_with_default("3.14")
         .validator([](const std::string &s) {
             double d = Options::Option::as_double(s);
             return d > 3.0;
         });
 
-    o.add({"bool", "Boolean value"}).argument();
+    o.add({"bf", "Boolean value, default false"}).takes_optional_argument_with_default("false");
+    o.add({"bt", "Boolean value, default true"}).takes_optional_argument_with_default("true");
 
     if (!o.parse(argc, argv) || o.as_bool("help"))
     {
-        cout << "Usage: " << argv[0] << " [options] -- [positional arguments]" << endl;
+        cout << "Usage: " << argv[0] << " [options] [-- [positional arguments]]" << endl;
         cout << o.possible_options() << endl;
         return -1;
     }
@@ -49,7 +47,8 @@ int main(int argc, char *argv[])
     cout << " config  : " << o.as_string("config") << endl;
     cout << " int     : " << o.as_int("int") << endl;
     cout << " double  : " << o.as_double("double") << endl;
-    cout << " bool    : " << o.as_bool("bool") << endl;
+    cout << " bf      : " << o.as_bool("bf") << endl;
+    cout << " bt      : " << o.as_bool("bt") << endl;
 
     // positional arguments are all the strings after "--" separator, for example:
     // ./example -c config_file.txt -v -- these strings are positional arguments
