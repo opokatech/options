@@ -1,21 +1,65 @@
 #include <algorithm>
 #include <iomanip>
 #include <sstream>
-#include <stdexcept>
 #include <string.h>
+#include <vector>
 
 #include "Options.hpp"
 
 namespace Options
 {
+    struct Options::Impl
+    {
+        using opts_t = std::vector<Option>;
+        using pos_t  = std::vector<std::string>;
+
+        opts_t::const_iterator find_option_by_long_name(const std::string &name) const
+        {
+            auto o = std::find_if(_options.cbegin(), _options.cend(),
+                                  [&name](const Option &o) { return o.long_name() == name; });
+
+            if (o == _options.cend())
+                throw std::logic_error("option '" + name + "' not found");
+
+            return o;
+        }
+
+        opts_t::iterator find_option_by_name_with_dashes(const std::string &name)
+        {
+            return std::find_if(_options.begin(), _options.end(), [&name](const Option &o) {
+                if (name == (std::string("-") + o.short_name()))
+                    return true;
+
+                if (name == ("--" + o.long_name()))
+                    return true;
+
+                return false;
+            });
+        }
+
+        opts_t                   _options;
+        uint32_t                 _longest_option_name = 0;
+        std::vector<std::string> _positional;
+    };
+
+    // ---------------------------------------------------------------------------------------------
+
+    Options::Options() : _impl(new Impl) {}
+
+    // ---------------------------------------------------------------------------------------------
+
+    Options::~Options() { delete _impl; }
+
+    // ---------------------------------------------------------------------------------------------
+
     Option &Options::add(const Option &o)
     {
-        _options.push_back(o);
+        _impl->_options.push_back(o);
 
-        if (o.long_name().size() > _longest_option_name)
-            _longest_option_name = o.long_name().size();
+        if (o.long_name().size() > _impl->_longest_option_name)
+            _impl->_longest_option_name = o.long_name().size();
 
-        return _options.back();
+        return _impl->_options.back();
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -29,16 +73,16 @@ namespace Options
         while (pos < argc)
         {
             if (collect_positionals)
-                _positional.push_back(argv[pos]);
+                _impl->_positional.push_back(argv[pos]);
             else
             {
                 if (strcmp(argv[pos], "--") == 0)
                     collect_positionals = true;
                 else
                 {
-                    auto o = find_option_by_name_with_dashes(argv[pos]);
+                    auto o = _impl->find_option_by_name_with_dashes(argv[pos]);
 
-                    if (o == _options.end()) // not found
+                    if (o == _impl->_options.end()) // not found
                         return false;
 
                     if (o->has_argument())
@@ -67,35 +111,44 @@ namespace Options
             return (!o.is_mandatory() || o.was_found());
         };
 
-        return std::all_of(_options.cbegin(), _options.cend(), non_mandatory_or_found);
+        return std::all_of(_impl->_options.cbegin(), _impl->_options.cend(),
+                           non_mandatory_or_found);
     }
+
+    // ---------------------------------------------------------------------------------------------
+
+    size_t Options::positional_count() const { return _impl->_positional.size(); }
+
+    // ---------------------------------------------------------------------------------------------
+
+    const std::string &Options::positional(size_t idx) { return _impl->_positional.at(idx); }
 
     // ---------------------------------------------------------------------------------------------
 
     int32_t Options::as_int(const std::string &name) const
     {
-        return find_option_by_long_name(name)->as_int();
+        return _impl->find_option_by_long_name(name)->as_int();
     }
 
     // ---------------------------------------------------------------------------------------------
 
     double Options::as_double(const std::string &name) const
     {
-        return find_option_by_long_name(name)->as_double();
+        return _impl->find_option_by_long_name(name)->as_double();
     }
 
     // ---------------------------------------------------------------------------------------------
 
     bool Options::as_bool(const std::string &name) const
     {
-        return find_option_by_long_name(name)->as_bool();
+        return _impl->find_option_by_long_name(name)->as_bool();
     }
 
     // ---------------------------------------------------------------------------------------------
 
     const std::string &Options::as_string(const std::string &name) const
     {
-        return find_option_by_long_name(name)->as_string();
+        return _impl->find_option_by_long_name(name)->as_string();
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -106,9 +159,9 @@ namespace Options
 
         std::left(ss); // align left
 
-        const int32_t SPACE_FOR_NAMES = 8 + static_cast<int32_t>(_longest_option_name);
+        const int32_t SPACE_FOR_NAMES = 8 + static_cast<int32_t>(_impl->_longest_option_name);
 
-        for (const auto &o: _options)
+        for (const auto &o: _impl->_options)
         {
             std::string short_long;
 
@@ -131,33 +184,5 @@ namespace Options
         }
 
         return ss.str();
-    }
-
-    // ---------------------------------------------------------------------------------------------
-
-    Options::opts_t::const_iterator Options::find_option_by_long_name(const std::string &name) const
-    {
-        auto o = std::find_if(_options.cbegin(), _options.cend(),
-                              [&name](const Option &o) { return o.long_name() == name; });
-
-        if (o == _options.cend())
-            throw std::logic_error("option '" + name + "' not found");
-
-        return o;
-    }
-
-    // ---------------------------------------------------------------------------------------------
-
-    Options::opts_t::iterator Options::find_option_by_name_with_dashes(const std::string &name)
-    {
-        return std::find_if(_options.begin(), _options.end(), [&name](const Option &o) {
-            if (name == (std::string("-") + o.short_name()))
-                return true;
-
-            if (name == ("--" + o.long_name()))
-                return true;
-
-            return false;
-        });
     }
 } // namespace Options
