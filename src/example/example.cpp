@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "options/Converters.hpp"
 #include "options/Options.hpp"
 
 int main(int argc, char *argv[])
@@ -9,34 +10,30 @@ int main(int argc, char *argv[])
 
     Options::Options o;
 
-    o.add({"help", 'h', "This help is accessible via short and long option"});
-    o.add({"verbose", 'v', "Verbose - accessible via -v and --verbose"});
-    o.add({"dlevel", "Debug level, one of none, debug, error - it is checked by the validator"})
-        .takes_optional_argument_with_default("none")
-        .validator(
-            [](const std::string &v) { return (v == "none" || v == "debug" || v == "error"); });
+    o.add_flag("help", 'h', "This help is accessible via short and long option");
+    o.add_flag("verbose", 'v', "Verbose - accessible via -v and --verbose");
+    o.add_optional(
+        "dlevel", "Debug level, one of none, debug, error - it is checked by the validator", "none",
+        [](const std::string &v) { return (v == "none" || v == "debug" || v == "error"); });
 
-    o.add({"config", 'c', "Configuration file"}).takes_mandatory_argument();
-    o.add({"int", 'i', "Some small integer in range <-10..10> as checked by validator"})
-        .takes_optional_argument_with_default("4")
-        .validator([](const std::string &s) {
-            int32_t i = Options::Option::as_int(s);
-            return i >= -10 && i <= 10;
-        });
-    o.add({"double", 'd', "Double value > 3.0"})
-        .takes_optional_argument_with_default("3.14")
-        .validator([](const std::string &s) {
-            double d = Options::Option::as_double(s);
-            return d > 3.0;
-        });
+    o.add_mandatory("config", 'c', "Configuration file");
+    o.add_optional("int", 'i', "Some small integer in range <-10..10> as checked by validator", "4",
+                   [](const std::string &s) {
+                       int32_t i = Options::as_int(s);
+                       return i >= -10 && i <= 10;
+                   });
+    o.add_optional("double", 'd', "Double value > 3.0", "3.14", [](const std::string &s) {
+        double d = Options::as_double(s);
+        return d > 3.0;
+    });
 
-    o.add({"bf", "Boolean value, default false"}).takes_optional_argument_with_default("false");
-    o.add({"bt", "Boolean value, default true"}).takes_optional_argument_with_default("true");
+    o.add_optional("bf", "Boolean value", "false");
+    o.add_optional("bt", "Boolean value", "true");
 
     if (!o.parse(argc, argv) || o.as_bool("help"))
     {
         cout << "Usage: " << argv[0] << " [options] [-- [positional arguments]]" << endl;
-        cout << o.possible_options() << endl;
+        cout << o.get_possible_options() << endl;
         return -1;
     }
 

@@ -11,10 +11,11 @@ TEST_CASE("Option")
         REQUIRE(o.long_name() == "long_name");
         REQUIRE(o.description() == "description");
         REQUIRE(o.short_name() == Options::Option::SHORT_NOT_USED);
-        REQUIRE_FALSE(o.has_argument());
+        REQUIRE(o.is_flag());
         REQUIRE_FALSE(o.is_mandatory());
-        REQUIRE_FALSE(o.has_default_value());
-        REQUIRE_FALSE(o.was_found());
+        REQUIRE_FALSE(o.is_optional());
+        REQUIRE_FALSE(o.has_argument());
+        REQUIRE_FALSE(o.was_set());
 
         REQUIRE(o.as_int() == 0);
         REQUIRE(o.as_uint() == 0);
@@ -30,10 +31,11 @@ TEST_CASE("Option")
         REQUIRE(o.long_name() == "long_name");
         REQUIRE(o.description() == "description");
         REQUIRE(o.short_name() == 'l');
-        REQUIRE_FALSE(o.has_argument());
+        REQUIRE(o.is_flag());
         REQUIRE_FALSE(o.is_mandatory());
-        REQUIRE_FALSE(o.has_default_value());
-        REQUIRE_FALSE(o.was_found());
+        REQUIRE_FALSE(o.is_optional());
+        REQUIRE_FALSE(o.has_argument());
+        REQUIRE_FALSE(o.was_set());
 
         REQUIRE(o.as_int() == 0);
         REQUIRE(o.as_uint() == 0);
@@ -43,10 +45,10 @@ TEST_CASE("Option")
 
         SECTION("Using default textual value for not found option")
         {
-            o.takes_optional_argument_with_default("bla");
+            o.set_optional("bla");
 
-            REQUIRE(o.has_default_value());
-            REQUIRE_FALSE(o.was_found());
+            REQUIRE(o.is_optional());
+            REQUIRE_FALSE(o.was_set());
 
             REQUIRE(o.as_int() == 0);
             REQUIRE(o.as_uint() == 0);
@@ -57,10 +59,10 @@ TEST_CASE("Option")
 
         SECTION("Using default positive int for not found option")
         {
-            o.takes_optional_argument_with_default("5");
+            o.set_optional("5");
 
-            REQUIRE(o.has_default_value());
-            REQUIRE_FALSE(o.was_found());
+            REQUIRE(o.is_optional());
+            REQUIRE_FALSE(o.was_set());
 
             REQUIRE(o.as_int() == 5);
             REQUIRE(o.as_uint() == 5);
@@ -71,10 +73,10 @@ TEST_CASE("Option")
 
         SECTION("Using default double for not found option")
         {
-            o.takes_optional_argument_with_default("3.14");
+            o.set_optional("3.14");
 
-            REQUIRE(o.has_default_value());
-            REQUIRE_FALSE(o.was_found());
+            REQUIRE(o.is_optional());
+            REQUIRE_FALSE(o.was_set());
 
             REQUIRE(o.as_int() == 3);
             REQUIRE(o.as_uint() == 3);
@@ -85,10 +87,10 @@ TEST_CASE("Option")
 
         SECTION("Using default bool for not found option")
         {
-            o.takes_optional_argument_with_default("true");
+            o.set_optional("true");
 
-            REQUIRE(o.has_default_value());
-            REQUIRE_FALSE(o.was_found());
+            REQUIRE(o.is_optional());
+            REQUIRE_FALSE(o.was_set());
 
             REQUIRE(o.as_int() == 0);
             REQUIRE(o.as_uint() == 0);
@@ -102,30 +104,31 @@ TEST_CASE("Option")
     {
         Options::Option o("opt", "some description");
 
-        o.takes_optional_argument_with_default("bla");
-        REQUIRE_FALSE(o.was_found());
+        o.set_optional("bla");
+        REQUIRE_FALSE(o.was_set());
         REQUIRE(o.as_string() == "bla"); // was not found, so returning default
 
         REQUIRE(o.set_value("whatever"));
-        REQUIRE(o.was_found());
+        REQUIRE(o.was_set());
         REQUIRE(o.as_string() == "whatever"); // found, so returning found-value
     }
 
-    SECTION("Using validator")
+    SECTION("Using validator on optional option")
     {
         Options::Option o("opt", "valid are strings: hello, world");
 
-        o.validator([](const std::string &v) { return v == "hello" || v == "world"; });
+        o.set_optional("");
+        o.set_validator([](const std::string &v) { return v == "hello" || v == "world"; });
 
-        REQUIRE_FALSE(o.was_found());
+        REQUIRE_FALSE(o.was_set());
         REQUIRE(o.as_string().empty());
 
         REQUIRE_FALSE(o.set_value("whatever"));
-        REQUIRE_FALSE(o.was_found());
+        REQUIRE_FALSE(o.was_set());
         REQUIRE(o.as_string().empty());
 
         REQUIRE(o.set_value("hello"));
-        REQUIRE(o.was_found());
+        REQUIRE(o.was_set());
         REQUIRE(o.as_string() == "hello");
     }
 }

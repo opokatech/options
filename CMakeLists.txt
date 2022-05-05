@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.13)
 
 project(
     options
-    VERSION 1.0.0
+    VERSION 2.0.0
     LANGUAGES CXX)
 
 option(USE_TESTS "Build tests" OFF)
