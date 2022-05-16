@@ -13,6 +13,7 @@ all:
 	@echo ""
 	@echo "Targets:"
 	@echo "  example   - build example program"
+	@echo "  examplerpi- build example program for Raspberry Pi 3+"
 	@echo "  tests     - build tests and run"
 	@echo "  clean     - cleans build directory"
 	@echo "  remove    - removes build directories"
@@ -23,6 +24,14 @@ example:
 	@make BUILD_DIR=build_$@_${BUILD_TYPE_LC} EXAMPLE=ON __build
 	@rm -f compile_commands.json
 	@ln -s build_$@_${BUILD_TYPE_LC}/compile_commands.json .
+
+examplerpi:
+	@cmake -S . -B build_rpi -G Ninja \
+		   --toolchain cmake/rpi.cmake \
+		   -DUSE_EXAMPLE=ON \
+		   -DUSE_TESTS=OFF \
+           -DCMAKE_BUILD_TYPE=Release
+	@cmake --build build_rpi
 
 tests:
 	@make TESTS=ON example
