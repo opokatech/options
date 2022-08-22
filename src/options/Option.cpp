@@ -34,22 +34,22 @@ namespace Options
 
     // ---------------------------------------------------------------------------------------------
 
-    Option &Option::set_validator(validator_t v)
+    Option &Option::set_validator(validator_t validator)
     {
-        _validator = v;
+        _validator = validator;
         return *this;
     }
 
     // ---------------------------------------------------------------------------------------------
 
-    bool Option::set_value(const std::string &v)
+    bool Option::set_value(const std::string &value)
     {
         if (has_argument() && _validator != nullptr)
-            if (!_validator(v))
+            if (!_validator(value))
                 return false;
 
         _was_set = true;
-        _value   = v;
+        _value   = value;
         return true;
     }
 

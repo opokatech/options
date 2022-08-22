@@ -60,12 +60,15 @@ TEST_CASE("Options")
             REQUIRE_FALSE(o.as_bool("verbose"));
         }
 
-        SECTION("Option not found") { REQUIRE_THROWS(o.as_bool("non_existing")); }
+        SECTION("Option not found")
+        {
+            REQUIRE_THROWS(o.as_bool("non_existing"));
+        }
 
         SECTION("More parameters")
         {
             const char  *argv[] = {"prg",         "--mode", "fast",     "-o", "false",
-                                  "--only_long", "--",     "whatever", "is", "here"};
+                                   "--only_long", "--",     "whatever", "is", "here"};
             const size_t argc   = sizeof(argv) / sizeof(char *);
 
             REQUIRE(o.parse(argc, argv));

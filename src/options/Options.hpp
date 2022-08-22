@@ -39,10 +39,10 @@ namespace Options
         ~Options();
 
         // explicitly disallow copying in any form
-        Options(const Options &) = delete;
-        Options(Options &&)      = delete;
+        Options(const Options &)            = delete;
+        Options(Options &&)                 = delete;
         Options &operator=(const Options &) = delete;
-        Options &operator=(Options &&) = delete;
+        Options &operator=(Options &&)      = delete;
 
         void add_flag(const std::string &long_name, char short_name,
                       const std::string &description);

@@ -13,34 +13,35 @@ namespace Options
     {
         std::vector<Option>::const_iterator find_option_by_long_name(const std::string &name) const
         {
-            auto o = std::find_if(_options.cbegin(), _options.cend(),
-                                  [&name](const Option &o) { return o.long_name() == name; });
+            auto iter =
+                std::find_if(_options.cbegin(), _options.cend(),
+                             [&name](const Option &opt) { return opt.long_name() == name; });
 
-            if (o == _options.cend())
+            if (iter == _options.cend())
                 throw std::logic_error("option '" + name + "' not found");
 
-            return o;
+            return iter;
         }
 
         std::vector<Option>::iterator find_option_by_name_with_dashes(const std::string &name)
         {
-            return std::find_if(_options.begin(), _options.end(), [&name](const Option &o) {
-                if (name == (std::string("-") + o.short_name()))
+            return std::find_if(_options.begin(), _options.end(), [&name](const Option &opt) {
+                if (name == (std::string("-") + opt.short_name()))
                     return true;
 
-                if (name == ("--" + o.long_name()))
+                if (name == ("--" + opt.long_name()))
                     return true;
 
                 return false;
             });
         }
 
-        Option &add(const Option &o)
+        Option &add(const Option &opt)
         {
-            _options.push_back(o);
+            _options.push_back(opt);
 
-            if (o.long_name().size() > _longest_option_name)
-                _longest_option_name = o.long_name().size();
+            if (opt.long_name().size() > _longest_option_name)
+                _longest_option_name = opt.long_name().size();
 
             return _options.back();
         }
@@ -56,7 +57,10 @@ namespace Options
 
     // ---------------------------------------------------------------------------------------------
 
-    Options::~Options() { delete _impl; }
+    Options::~Options()
+    {
+        delete _impl;
+    }
 
     // ---------------------------------------------------------------------------------------------
 
@@ -128,24 +132,24 @@ namespace Options
                     collect_positionals = true;
                 else
                 {
-                    auto o = _impl->find_option_by_name_with_dashes(argv[pos]);
+                    auto iter = _impl->find_option_by_name_with_dashes(argv[pos]);
 
-                    if (o == _impl->_options.end()) // not found
+                    if (iter == _impl->_options.end()) // not found
                         return false;
 
-                    if (o->has_argument())
+                    if (iter->has_argument())
                     {
                         pos += 1;
                         if (pos >= argc) // value not found
                             return false;
 
                         // set the value and validate it if there is a validator
-                        if (!o->set_value(argv[pos]))
+                        if (!iter->set_value(argv[pos]))
                             return false;
                     }
                     else // must be a flag
                     {
-                        if (!o->set_value("true"))
+                        if (!iter->set_value("true"))
                             return false;
                     }
                 }
@@ -155,8 +159,8 @@ namespace Options
         }
 
         // this method succeeds if we all mandatory options were found
-        auto non_mandatory_or_found = [](const Option &o) {
-            return (!o.is_mandatory() || o.was_set());
+        auto non_mandatory_or_found = [](const Option &opt) {
+            return (!opt.is_mandatory() || opt.was_set());
         };
 
         return std::all_of(_impl->_options.cbegin(), _impl->_options.cend(),
@@ -165,11 +169,17 @@ namespace Options
 
     // ---------------------------------------------------------------------------------------------
 
-    size_t Options::positional_count() const { return _impl->_positional.size(); }
+    size_t Options::positional_count() const
+    {
+        return _impl->_positional.size();
+    }
 
     // ---------------------------------------------------------------------------------------------
 
-    const std::string &Options::positional(size_t idx) { return _impl->_positional.at(idx); }
+    const std::string &Options::positional(size_t idx)
+    {
+        return _impl->_positional.at(idx);
+    }
 
     // ---------------------------------------------------------------------------------------------
 
@@ -203,34 +213,34 @@ namespace Options
 
     std::string Options::get_possible_options() const
     {
-        std::stringstream ss;
+        std::stringstream sstream;
 
-        std::left(ss); // align left
+        std::left(sstream); // align left
 
         const int32_t SPACE_FOR_NAMES = 8 + static_cast<int32_t>(_impl->_longest_option_name);
 
-        for (const auto &o: _impl->_options)
+        for (const auto &opt: _impl->_options)
         {
             std::string short_long;
 
-            if (o.short_name() != Option::SHORT_NOT_USED)
-                short_long += std::string("-") + o.short_name() + ", ";
+            if (opt.short_name() != Option::SHORT_NOT_USED)
+                short_long += std::string("-") + opt.short_name() + ", ";
             else
                 short_long += "    ";
 
-            short_long += ("--" + o.long_name());
+            short_long += ("--" + opt.long_name());
 
-            ss << " " << std::setw(SPACE_FOR_NAMES) << short_long
-               << (o.is_mandatory() ? "M " : "  ");
+            sstream << " " << std::setw(SPACE_FOR_NAMES) << short_long
+                    << (opt.is_mandatory() ? "M " : "  ");
 
-            ss << o.description();
+            sstream << opt.description();
 
-            if (o.is_optional())
-                ss << " (default: " << o.default_value() + ")";
+            if (opt.is_optional())
+                sstream << " (default: " << opt.default_value() + ")";
 
-            ss << std::endl;
+            sstream << std::endl;
         }
 
-        return ss.str();
+        return sstream.str();
     }
 } // namespace Options
