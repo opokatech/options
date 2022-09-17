@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.13)
 project(
     options
     VERSION 2.0.0
+    DESCRIPTION "Simple command line options"
+    HOMEPAGE_URL "https://github.com/opokatech/options"
     LANGUAGES CXX)
 
 option(USE_TESTS "Build tests" OFF)
