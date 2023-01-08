@@ -16,7 +16,7 @@ all:
 	@echo "  examplerpi- build example program for Raspberry Pi 3+"
 	@echo "  tests     - build tests and run"
 	@echo "  clean     - cleans build directory"
-	@echo "  remove    - removes build directories"
+	@echo "  cleanall  - removes build directories"
 	@echo "  format    - use clang-format on C/C++ files in ${SOURCE_DIRS}"
 	@echo "  tidy      - use clang-tidy in ${SOURCE_DIRS}"
 
@@ -52,8 +52,9 @@ clean:
 	@if [ -d build_example_${BUILD_TYPE_LC} ] ; then \
 		cmake --build build_example_${BUILD_TYPE_LC} --target clean ; \
 		fi
+	@rm -f compile_commands.json
 
-remove:
+cleanall:
 	@rm -rf build_* compile_commands.json
 
 format:
