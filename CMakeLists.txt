@@ -15,7 +15,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON) # ensure -std=c++...
 set(CMAKE_CXX_EXTENSIONS OFF) # avoid -std=g++...
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-set(CMAKE_EXPORT_COMPILE_COMMANDS On)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # use ccache if found
 find_program(CCACHE_PROGRAM ccache)
