@@ -8,8 +8,8 @@ TEST_CASE("Options")
 
     SECTION("Not expecting any parameters and nothing given")
     {
-        const char  *argv[] = {"prg"};
-        const size_t argc   = sizeof(argv) / sizeof(char *);
+        const char *argv[] = {"prg"};
+        const size_t argc = sizeof(argv) / sizeof(char *);
 
         REQUIRE(o.parse(argc, argv));
         REQUIRE(o.positional_count() == 0);
@@ -30,8 +30,8 @@ TEST_CASE("Options")
 
         SECTION("Missing mandatory")
         {
-            const char  *argv[] = {"prg", "-v"};
-            const size_t argc   = sizeof(argv) / sizeof(char *);
+            const char *argv[] = {"prg", "-v"};
+            const size_t argc = sizeof(argv) / sizeof(char *);
 
             REQUIRE_FALSE(o.parse(argc, argv));
         }
@@ -67,9 +67,9 @@ TEST_CASE("Options")
 
         SECTION("More parameters")
         {
-            const char  *argv[] = {"prg",         "--mode", "fast",     "-o", "false",
-                                   "--only_long", "--",     "whatever", "is", "here"};
-            const size_t argc   = sizeof(argv) / sizeof(char *);
+            const char *argv[] = {"prg",         "--mode", "fast",     "-o", "false",
+                                  "--only_long", "--",     "whatever", "is", "here"};
+            const size_t argc = sizeof(argv) / sizeof(char *);
 
             REQUIRE(o.parse(argc, argv));
 
@@ -95,13 +95,12 @@ TEST_CASE("Options")
         o.add_optional("color", 'c', "Color selection", "none");
         o.add_optional("speed", "Speed selection", "slow",
                        [](const std::string &v) { return v == "slow" || v == "fast"; });
-        o.add_optional("height", 'h', "Height", "low",
-                       [](const std::string &v) { return v == "low" || v == "high"; });
+        o.add_optional("height", 'h', "Height", "low", [](const std::string &v) { return v == "low" || v == "high"; });
 
         SECTION("no parameters")
         {
-            const char  *argv[] = {"prg"};
-            const size_t argc   = sizeof(argv) / sizeof(char *);
+            const char *argv[] = {"prg"};
+            const size_t argc = sizeof(argv) / sizeof(char *);
 
             REQUIRE(o.parse(argc, argv));
 
@@ -116,8 +115,8 @@ TEST_CASE("Options")
 
         SECTION("setting flags")
         {
-            const char  *argv[] = {"prg", "--verbose", "-d"};
-            const size_t argc   = sizeof(argv) / sizeof(char *);
+            const char *argv[] = {"prg", "--verbose", "-d"};
+            const size_t argc = sizeof(argv) / sizeof(char *);
 
             REQUIRE(o.parse(argc, argv));
 
@@ -127,16 +126,16 @@ TEST_CASE("Options")
 
         SECTION("setting optional without validator without value fails")
         {
-            const char  *argv[] = {"prg", "--mode"};
-            const size_t argc   = sizeof(argv) / sizeof(char *);
+            const char *argv[] = {"prg", "--mode"};
+            const size_t argc = sizeof(argv) / sizeof(char *);
 
             REQUIRE_FALSE(o.parse(argc, argv));
         }
 
         SECTION("setting optional without validator with any value is OK")
         {
-            const char  *argv[] = {"prg", "--mode", "some_mode"};
-            const size_t argc   = sizeof(argv) / sizeof(char *);
+            const char *argv[] = {"prg", "--mode", "some_mode"};
+            const size_t argc = sizeof(argv) / sizeof(char *);
 
             REQUIRE(o.parse(argc, argv));
             REQUIRE(o.as_string("mode") == "some_mode");
@@ -144,8 +143,8 @@ TEST_CASE("Options")
 
         SECTION("setting optional without validator with any value via short name is OK")
         {
-            const char  *argv[] = {"prg", "-c", "blue"};
-            const size_t argc   = sizeof(argv) / sizeof(char *);
+            const char *argv[] = {"prg", "-c", "blue"};
+            const size_t argc = sizeof(argv) / sizeof(char *);
 
             REQUIRE(o.parse(argc, argv));
             REQUIRE(o.as_string("color") == "blue");
@@ -153,16 +152,16 @@ TEST_CASE("Options")
 
         SECTION("setting optional with validator with invalid value fails")
         {
-            const char  *argv[] = {"prg", "--speed", "very_fast"};
-            const size_t argc   = sizeof(argv) / sizeof(char *);
+            const char *argv[] = {"prg", "--speed", "very_fast"};
+            const size_t argc = sizeof(argv) / sizeof(char *);
 
             REQUIRE_FALSE(o.parse(argc, argv));
         }
 
         SECTION("setting optional with validator with valid value is OK")
         {
-            const char  *argv[] = {"prg", "--speed", "fast"};
-            const size_t argc   = sizeof(argv) / sizeof(char *);
+            const char *argv[] = {"prg", "--speed", "fast"};
+            const size_t argc = sizeof(argv) / sizeof(char *);
 
             REQUIRE(o.parse(argc, argv));
             REQUIRE(o.as_string("speed") == "fast");
@@ -170,16 +169,16 @@ TEST_CASE("Options")
 
         SECTION("setting optional with validator with invalid value via short name fails")
         {
-            const char  *argv[] = {"prg", "-h", "something"};
-            const size_t argc   = sizeof(argv) / sizeof(char *);
+            const char *argv[] = {"prg", "-h", "something"};
+            const size_t argc = sizeof(argv) / sizeof(char *);
 
             REQUIRE_FALSE(o.parse(argc, argv));
         }
 
         SECTION("setting optional with validator with valid value via short name is OK")
         {
-            const char  *argv[] = {"prg", "-h", "high"};
-            const size_t argc   = sizeof(argv) / sizeof(char *);
+            const char *argv[] = {"prg", "-h", "high"};
+            const size_t argc = sizeof(argv) / sizeof(char *);
 
             REQUIRE(o.parse(argc, argv));
             REQUIRE(o.as_string("height") == "high");

@@ -39,37 +39,35 @@ namespace Options
         ~Options();
 
         // explicitly disallow copying in any form
-        Options(const Options &)            = delete;
-        Options(Options &&)                 = delete;
+        Options(const Options &) = delete;
+        Options(Options &&) = delete;
         Options &operator=(const Options &) = delete;
-        Options &operator=(Options &&)      = delete;
+        Options &operator=(Options &&) = delete;
 
-        void add_flag(const std::string &long_name, char short_name,
-                      const std::string &description);
+        void add_flag(const std::string &long_name, char short_name, const std::string &description);
 
         void add_flag(const std::string &long_name, const std::string &description);
 
-        void add_optional(const std::string &long_name, char short_name,
-                          const std::string &description, const std::string &default_value,
-                          validator_t validator = nullptr);
+        void add_optional(const std::string &long_name, char short_name, const std::string &description,
+                          const std::string &default_value, validator_t validator = nullptr);
 
         void add_optional(const std::string &long_name, const std::string &description,
                           const std::string &default_value, validator_t validator = nullptr);
 
-        void add_mandatory(const std::string &long_name, char short_name,
-                           const std::string &description, validator_t validator = nullptr);
+        void add_mandatory(const std::string &long_name, char short_name, const std::string &description,
+                           validator_t validator = nullptr);
 
         void add_mandatory(const std::string &long_name, const std::string &description,
                            validator_t validator = nullptr);
 
         bool parse(int argc, const char *const *argv, int start_idx = 1);
 
-        size_t             positional_count() const;
+        size_t positional_count() const;
         const std::string &positional(size_t idx);
 
-        int32_t            as_int(const std::string &name) const;
-        double             as_double(const std::string &name) const;
-        bool               as_bool(const std::string &name) const;
+        int32_t as_int(const std::string &name) const;
+        double as_double(const std::string &name) const;
+        bool as_bool(const std::string &name) const;
         const std::string &as_string(const std::string &name) const;
 
         std::string get_possible_options() const;

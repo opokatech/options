@@ -1,7 +1,7 @@
 #include <algorithm>
+#include <cstring>
 #include <iomanip>
 #include <sstream>
-#include <string.h>
 #include <vector>
 
 #include "Option.hpp"
@@ -11,11 +11,11 @@ namespace Options
 {
     struct Options::Impl
     {
+        // This will throw an exception if the option is not found.
         std::vector<Option>::const_iterator find_option_by_long_name(const std::string &name) const
         {
-            auto iter =
-                std::find_if(_options.cbegin(), _options.cend(),
-                             [&name](const Option &opt) { return opt.long_name() == name; });
+            auto iter = std::find_if(_options.cbegin(), _options.cend(),
+                                     [&name](const Option &opt) { return opt.long_name() == name; });
 
             if (iter == _options.cend())
                 throw std::logic_error("option '" + name + "' not found");
@@ -23,6 +23,7 @@ namespace Options
             return iter;
         }
 
+        // Return an iterator to the option if found, or _options.end() otherwise.
         std::vector<Option>::iterator find_option_by_name_with_dashes(const std::string &name)
         {
             return std::find_if(_options.begin(), _options.end(), [&name](const Option &opt) {
@@ -36,9 +37,9 @@ namespace Options
             });
         }
 
-        Option &add(const Option &opt)
+        Option &add(const Option &&opt)
         {
-            _options.push_back(opt);
+            _options.emplace_back(opt);
 
             if (opt.long_name().size() > _longest_option_name)
                 _longest_option_name = opt.long_name().size();
@@ -46,51 +47,33 @@ namespace Options
             return _options.back();
         }
 
-        std::vector<Option>      _options;
-        uint32_t                 _longest_option_name = 0;
+        std::vector<Option> _options;
+        uint32_t _longest_option_name = 0;
         std::vector<std::string> _positional;
     };
 
-    // ---------------------------------------------------------------------------------------------
-
     Options::Options() : _impl(new Impl) {}
-
-    // ---------------------------------------------------------------------------------------------
 
     Options::~Options()
     {
         delete _impl;
     }
 
-    // ---------------------------------------------------------------------------------------------
-
-    // ---------------------------------------------------------------------------------------------
-
-    void Options::add_flag(const std::string &long_name, char short_name,
-                           const std::string &description)
+    void Options::add_flag(const std::string &long_name, char short_name, const std::string &description)
     {
         _impl->add({long_name, short_name, description});
     }
-
-    // ---------------------------------------------------------------------------------------------
 
     void Options::add_flag(const std::string &long_name, const std::string &description)
     {
         add_flag(long_name, Option::SHORT_NOT_USED, description);
     }
 
-    // ---------------------------------------------------------------------------------------------
-
-    void Options::add_optional(const std::string &long_name, char short_name,
-                               const std::string &description, const std::string &default_value,
-                               validator_t validator)
+    void Options::add_optional(const std::string &long_name, char short_name, const std::string &description,
+                               const std::string &default_value, validator_t validator)
     {
-        _impl->add({long_name, short_name, description})
-            .set_optional(default_value)
-            .set_validator(validator);
+        _impl->add({long_name, short_name, description}).set_optional(default_value).set_validator(validator);
     }
-
-    // ---------------------------------------------------------------------------------------------
 
     void Options::add_optional(const std::string &long_name, const std::string &description,
                                const std::string &default_value, validator_t validator)
@@ -98,23 +81,16 @@ namespace Options
         add_optional(long_name, Option::SHORT_NOT_USED, description, default_value, validator);
     }
 
-    // ---------------------------------------------------------------------------------------------
-
-    void Options::add_mandatory(const std::string &long_name, char short_name,
-                                const std::string &description, validator_t validator)
+    void Options::add_mandatory(const std::string &long_name, char short_name, const std::string &description,
+                                validator_t validator)
     {
         _impl->add({long_name, short_name, description}).set_mandatory().set_validator(validator);
     }
 
-    // ---------------------------------------------------------------------------------------------
-
-    void Options::add_mandatory(const std::string &long_name, const std::string &description,
-                                validator_t validator)
+    void Options::add_mandatory(const std::string &long_name, const std::string &description, validator_t validator)
     {
         add_mandatory(long_name, Option::SHORT_NOT_USED, description, validator);
     }
-
-    // ---------------------------------------------------------------------------------------------
 
     bool Options::parse(int argc, const char *const *argv, int start_idx)
     {
@@ -159,57 +135,40 @@ namespace Options
         }
 
         // this method succeeds if we all mandatory options were found
-        auto non_mandatory_or_found = [](const Option &opt) {
-            return (!opt.is_mandatory() || opt.was_set());
-        };
+        auto non_mandatory_or_found = [](const Option &opt) { return (!opt.is_mandatory() || opt.was_set()); };
 
-        return std::all_of(_impl->_options.cbegin(), _impl->_options.cend(),
-                           non_mandatory_or_found);
+        return std::all_of(_impl->_options.cbegin(), _impl->_options.cend(), non_mandatory_or_found);
     }
-
-    // ---------------------------------------------------------------------------------------------
 
     size_t Options::positional_count() const
     {
         return _impl->_positional.size();
     }
 
-    // ---------------------------------------------------------------------------------------------
-
     const std::string &Options::positional(size_t idx)
     {
         return _impl->_positional.at(idx);
     }
-
-    // ---------------------------------------------------------------------------------------------
 
     int32_t Options::as_int(const std::string &name) const
     {
         return _impl->find_option_by_long_name(name)->as_int();
     }
 
-    // ---------------------------------------------------------------------------------------------
-
     double Options::as_double(const std::string &name) const
     {
         return _impl->find_option_by_long_name(name)->as_double();
     }
-
-    // ---------------------------------------------------------------------------------------------
 
     bool Options::as_bool(const std::string &name) const
     {
         return _impl->find_option_by_long_name(name)->as_bool();
     }
 
-    // ---------------------------------------------------------------------------------------------
-
     const std::string &Options::as_string(const std::string &name) const
     {
         return _impl->find_option_by_long_name(name)->as_string();
     }
-
-    // ---------------------------------------------------------------------------------------------
 
     std::string Options::get_possible_options() const
     {
@@ -217,7 +176,8 @@ namespace Options
 
         std::left(sstream); // align left
 
-        const int32_t SPACE_FOR_NAMES = 8 + static_cast<int32_t>(_impl->_longest_option_name);
+        constexpr int32_t MIN_TEXT_WIDTH = 8;
+        const int32_t SPACE_FOR_NAMES = MIN_TEXT_WIDTH + static_cast<int32_t>(_impl->_longest_option_name);
 
         for (const auto &opt: _impl->_options)
         {
@@ -230,8 +190,7 @@ namespace Options
 
             short_long += ("--" + opt.long_name());
 
-            sstream << " " << std::setw(SPACE_FOR_NAMES) << short_long
-                    << (opt.is_mandatory() ? "M " : "  ");
+            sstream << " " << std::setw(SPACE_FOR_NAMES) << short_long << (opt.is_mandatory() ? "M " : "  ");
 
             sstream << opt.description();
 

@@ -12,15 +12,13 @@ int main(int argc, char *argv[])
 
     opts.add_flag("help", 'h', "This help is accessible via short and long option");
     opts.add_flag("verbose", 'v', "Verbose - accessible via -v and --verbose");
-    opts.add_optional("dlevel",
-                      "Debug level, one of none, debug, error - it is checked by the validator",
-                      "none", [](const std::string &value) {
-                          return (value == "none" || value == "debug" || value == "error");
-                      });
+    opts.add_optional(
+        "dlevel", "Debug level, one of none, debug, error - it is checked by the validator", "none",
+        [](const std::string &value) { return (value == "none" || value == "debug" || value == "error"); });
 
     opts.add_mandatory("config", 'c', "Configuration file");
-    opts.add_optional("int", 'i', "Some small integer in range <-10..10> as checked by validator",
-                      "4", [](const std::string &value) {
+    opts.add_optional("int", 'i', "Some small integer in range <-10..10> as checked by validator", "4",
+                      [](const std::string &value) {
                           int32_t num = Options::as_int(value);
                           return num >= -10 && num <= 10; // NOLINT
                       });

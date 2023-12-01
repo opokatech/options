@@ -8,14 +8,10 @@ namespace Options
     {
     }
 
-    // ---------------------------------------------------------------------------------------------
-
     Option::Option(const std::string &long_name, const std::string &description)
         : Option(long_name, SHORT_NOT_USED, description)
     {
     }
-
-    // ---------------------------------------------------------------------------------------------
 
     Option &Option::set_mandatory()
     {
@@ -23,24 +19,18 @@ namespace Options
         return *this;
     }
 
-    // ---------------------------------------------------------------------------------------------
-
     Option &Option::set_optional(const std::string &default_value)
     {
-        _type          = Type::Optional;
+        _type = Type::Optional;
         _default_value = default_value;
         return *this;
     }
-
-    // ---------------------------------------------------------------------------------------------
 
     Option &Option::set_validator(validator_t validator)
     {
         _validator = validator;
         return *this;
     }
-
-    // ---------------------------------------------------------------------------------------------
 
     bool Option::set_value(const std::string &value)
     {
@@ -49,11 +39,9 @@ namespace Options
                 return false;
 
         _was_set = true;
-        _value   = value;
+        _value = value;
         return true;
     }
-
-    // ---------------------------------------------------------------------------------------------
 
     int32_t Option::as_int() const
     {
@@ -63,8 +51,6 @@ namespace Options
         return Options::as_int(_default_value);
     }
 
-    // ---------------------------------------------------------------------------------------------
-
     uint32_t Option::as_uint() const
     {
         if (was_set())
@@ -72,8 +58,6 @@ namespace Options
 
         return Options::as_uint(_default_value);
     }
-
-    // ---------------------------------------------------------------------------------------------
 
     double Option::as_double() const
     {
@@ -83,8 +67,6 @@ namespace Options
         return Options::as_double(_default_value);
     }
 
-    // ---------------------------------------------------------------------------------------------
-
     bool Option::as_bool() const
     {
         if (was_set())
@@ -92,8 +74,6 @@ namespace Options
 
         return Options::as_bool(_default_value);
     }
-
-    // ---------------------------------------------------------------------------------------------
 
     const std::string &Option::as_string() const
     {
