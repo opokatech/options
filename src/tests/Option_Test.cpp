@@ -131,4 +131,33 @@ TEST_CASE("Option")
         REQUIRE(o.was_set());
         REQUIRE(o.as_string() == "hello");
     }
+
+    SECTION("Using validator on mandatory option")
+    {
+        Options::Option o("opt", "valid are strings: hello, world");
+
+        o.set_mandatory();
+        o.set_validator([](const std::string &v) { return v == "hello" || v == "world"; });
+
+        REQUIRE_FALSE(o.was_set());
+        REQUIRE(o.as_string().empty());
+
+        REQUIRE_FALSE(o.set_value("whatever"));
+        REQUIRE_FALSE(o.was_set());
+        REQUIRE(o.as_string().empty());
+
+        SECTION("Setting value hello")
+        {
+            REQUIRE(o.set_value("hello"));
+            REQUIRE(o.was_set());
+            REQUIRE(o.as_string() == "hello");
+        }
+
+        SECTION("Setting value world")
+        {
+            REQUIRE(o.set_value("world"));
+            REQUIRE(o.was_set());
+            REQUIRE(o.as_string() == "world");
+        }
+    }
 }
