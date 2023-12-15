@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     opts.add_flag("help", 'h', "This help is accessible via short and long option");
     opts.add_flag("verbose", 'v', "Verbose - accessible via -v and --verbose");
     opts.add_optional(
-        "dlevel", "Debug level, one of none, debug, error - it is checked by the validator", "none",
+        "level", "Debug level, one of none, debug, error - it is checked by the validator", "none",
         [](const std::string &value) { return (value == "none" || value == "debug" || value == "error"); });
 
     opts.add_mandatory("config", 'c', "Configuration file");
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     cout << std::boolalpha;
     cout << "Options:" << endl;
     cout << " verbose : " << opts.as_bool("verbose") << endl;
-    cout << " dlevel  : " << opts.as_string("dlevel") << endl;
+    cout << " level   : " << opts.as_string("level") << endl;
     cout << " config  : " << opts.as_string("config") << endl;
     cout << " int     : " << opts.as_int("int") << endl;
     cout << " double  : " << opts.as_double("double") << endl;

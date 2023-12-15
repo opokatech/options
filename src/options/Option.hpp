@@ -21,13 +21,22 @@ namespace Options
     class Option
     {
     public:
+        // Creates an option with both a long and short name.
         Option(const std::string &long_name, char short_name, const std::string &description);
+
+        // Creates an option with only a long name.
         Option(const std::string &long_name, const std::string &description);
 
+        // Mark the option as mandatory.
         Option &set_mandatory();
+
+        // Mark the option as optional and set the default value.
         Option &set_optional(const std::string &default_value);
 
+        // Set a validator for the option.
         Option &set_validator(validator_t v);
+
+        // Sets the value of an option, validates it if necessary, and returns a success status.
         bool set_value(const std::string &v);
 
         char short_name() const { return _short_name; }
@@ -54,7 +63,7 @@ namespace Options
         {
             Flag,     // simple flag without parameters
             Optional, // takes optional parameter and requires default
-            Mandatory // takes mandatory parameter (so no default)
+            Mandatory // takes mandatory parameter - no default
         };
 
         char _short_name = SHORT_NOT_USED;

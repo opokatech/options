@@ -134,8 +134,8 @@ namespace Options
             pos += 1;
         }
 
-        // this method succeeds if we all mandatory options were found
-        auto non_mandatory_or_found = [](const Option &opt) { return (!opt.is_mandatory() || opt.was_set()); };
+        // this method succeeds if all the mandatory options were found and set
+        const auto non_mandatory_or_found = [](const Option &opt) { return (!opt.is_mandatory() || opt.was_set()); };
 
         return std::all_of(_impl->_options.cbegin(), _impl->_options.cend(), non_mandatory_or_found);
     }
@@ -145,7 +145,7 @@ namespace Options
         return _impl->_positional.size();
     }
 
-    const std::string &Options::positional(size_t idx)
+    const std::string &Options::positional(size_t idx) const
     {
         return _impl->_positional.at(idx);
     }

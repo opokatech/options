@@ -63,7 +63,7 @@ namespace Options
         bool parse(int argc, const char *const *argv, int start_idx = 1);
 
         size_t positional_count() const;
-        const std::string &positional(size_t idx);
+        const std::string &positional(size_t idx) const;
 
         int32_t as_int(const std::string &name) const;
         double as_double(const std::string &name) const;
