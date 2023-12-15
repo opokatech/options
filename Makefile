@@ -58,8 +58,8 @@ cleanall:
 	@rm -rf build_* compile_commands.json
 
 format:
-	@find ${SOURCE_DIRS} -type f -name "*.[ch]" -o -name "*.[ch]pp" -exec clang-format -i {} \;
+	find ${SOURCE_DIRS} -type f -name "*.[ch]" -o -name "*.[ch]pp" -exec clang-format -i {} \;
+	find ${SOURCE_DIRS} CMakeLists.txt -type f -name CMakeLists.txt -exec cmake-format -i {} \;
 
 tidy:
 	@run-clang-tidy -fix -quiet ${SOURCE_DIRS}
-
