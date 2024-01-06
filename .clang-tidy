@@ -1,10 +1,12 @@
 ---
 Checks:          '-checks=-*,bugprone-*,clang-analyzer-*,cppcoreguidelines-*,readability-*,
+                  -cppcoreguidelines-avoid-c-arrays,
+                  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
                   -cppcoreguidelines-pro-bounds-pointer-arithmetic,
                   -readability-braces-around-statements,
                   -readability-function-cognitive-complexity
                  '
-                  
+
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false

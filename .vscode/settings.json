@@ -1,0 +1,10 @@
+{
+    "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
+        "cppcoreguidelines-avoid-do-while"
+    ],
+    "cSpell.words": [
+        "bugprone",
+        "cppcoreguidelines",
+        "Struct"
+    ]
+}

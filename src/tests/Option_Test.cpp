@@ -66,8 +66,8 @@ TEST_CASE("Option")
 
             REQUIRE(option.as_int() == 5);
             REQUIRE(option.as_uint() == 5);
-            REQUIRE(option.as_double() == 5.0);
-            REQUIRE(option.as_bool() == true); // non-zero value
+            REQUIRE(option.as_double() == 5.0); // NOLINT
+            REQUIRE(option.as_bool() == true);  // non-zero value
             REQUIRE(option.as_string() == "5");
         }
 
@@ -80,7 +80,7 @@ TEST_CASE("Option")
 
             REQUIRE(option.as_int() == 3);
             REQUIRE(option.as_uint() == 3);
-            REQUIRE(option.as_double() == 3.14);
+            REQUIRE(option.as_double() == 3.14); // NOLINT
             REQUIRE(option.as_bool() == true);
             REQUIRE(option.as_string() == "3.14");
         }
