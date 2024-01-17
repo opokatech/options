@@ -135,9 +135,9 @@ namespace Options
         }
 
         // this method succeeds if all the mandatory options were found and set
-        const auto non_mandatory_or_found = [](const Option &opt) { return (!opt.is_mandatory() || opt.was_set()); };
+        const auto NON_MANDATORY_OR_FOUND = [](const Option &opt) { return (!opt.is_mandatory() || opt.was_set()); };
 
-        return std::all_of(_impl->_options.cbegin(), _impl->_options.cend(), non_mandatory_or_found);
+        return std::all_of(_impl->_options.cbegin(), _impl->_options.cend(), NON_MANDATORY_OR_FOUND);
     }
 
     size_t Options::positional_count() const

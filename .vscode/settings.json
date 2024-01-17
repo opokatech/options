@@ -4,7 +4,9 @@
     ],
     "cSpell.words": [
         "bugprone",
+        "Constexpr",
         "cppcoreguidelines",
+        "positionals",
         "Struct"
     ]
 }
