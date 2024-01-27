@@ -2,6 +2,11 @@
     "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
         "cppcoreguidelines-avoid-do-while"
     ],
+    "C_Cpp.files.exclude": {
+        "**/.vscode": true,
+        "**/.vs": true,
+        "build_*/**": true
+    },
     "cSpell.words": [
         "bugprone",
         "Constexpr",
