@@ -14,6 +14,8 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # ensure -std=c++...
 set(CMAKE_CXX_EXTENSIONS OFF) # avoid -std=g++...
 
+include(cmake/compile_flags.cmake)
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
