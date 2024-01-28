@@ -16,10 +16,7 @@
                 "-DUSE_EXAMPLE=ON"
             ],
             "problemMatcher": [],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
+            "group": "build"
         },
         {
             "type": "shell",
@@ -32,7 +29,10 @@
             "dependsOn": [
                 "cmake configure"
             ],
-            "group": "build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "detail": "compiler: cmake",
             "problemMatcher": []
         }

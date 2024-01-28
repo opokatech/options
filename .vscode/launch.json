@@ -29,14 +29,13 @@
             ]
         },
         {
-            "name": "Example call",
+            "name": "Example call (gdb)",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build_example_debug/example",
             "args": ["-c", "some_config", "-v", "-d", "5.12"],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
-            "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
             "setupCommands": [
@@ -51,6 +50,17 @@
                     "ignoreFailures": true
                 }
             ]
+        },
+        {
+            "name": "Example call (lldb)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build_example_debug/example",
+            "args": ["-c", "some_config", "-v", "-d", "5.12"],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "externalConsole": false,
+            "MIMode": "lldb"
         }
     ]
 }
