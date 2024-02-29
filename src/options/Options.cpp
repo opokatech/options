@@ -155,6 +155,11 @@ namespace Options
         return _impl->find_option_by_long_name(name)->as_int();
     }
 
+    uint32_t Options::as_uint(const std::string &name) const
+    {
+        return _impl->find_option_by_long_name(name)->as_uint();
+    }
+
     double Options::as_double(const std::string &name) const
     {
         return _impl->find_option_by_long_name(name)->as_double();

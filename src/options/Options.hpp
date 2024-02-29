@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <string>
 
 #include "Validator.hpp"
@@ -66,6 +67,7 @@ namespace Options
         const std::string &positional(size_t idx) const;
 
         int32_t as_int(const std::string &name) const;
+        uint32_t as_uint(const std::string &name) const;
         double as_double(const std::string &name) const;
         bool as_bool(const std::string &name) const;
         const std::string &as_string(const std::string &name) const;

@@ -18,7 +18,7 @@ TEST_CASE("Options")
     SECTION("Parsing")
     {
         options.add_mandatory("mode", "Operation mode. Valid are: fast, slow.",
-                        [](const std::string &value) { return (value == "fast" || value == "slow"); });
+                              [](const std::string &value) { return (value == "fast" || value == "slow"); });
 
         options.add_optional("opt", 'o', "Bla bla", "");
         options.add_flag("only_long", "flag with only long option visible");
@@ -94,8 +94,9 @@ TEST_CASE("Options")
         options.add_optional("mode", "Operating mode", "fake");
         options.add_optional("color", 'c', "Color selection", "none");
         options.add_optional("speed", "Speed selection", "slow",
-                       [](const std::string &value) { return value == "slow" || value == "fast"; });
-        options.add_optional("height", 'h', "Height", "low", [](const std::string &value) { return value == "low" || value == "high"; });
+                             [](const std::string &value) { return value == "slow" || value == "fast"; });
+        options.add_optional("height", 'h', "Height", "low",
+                             [](const std::string &value) { return value == "low" || value == "high"; });
 
         SECTION("no parameters")
         {
