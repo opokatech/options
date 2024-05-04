@@ -7,7 +7,7 @@
 
 namespace Options
 {
-    /* Class Options.
+    /* Class Parser.
      *
      * This class defines expected and possible options passed to the program.
      *
@@ -33,17 +33,17 @@ namespace Options
      *
      * Extensive example of how to use this class is in example/example.cpp.
      */
-    class Options
+    class Parser
     {
     public:
-        Options();
-        ~Options();
+        Parser();
+        ~Parser();
 
         // explicitly disallow copying in any form
-        Options(const Options &) = delete;
-        Options(Options &&) = delete;
-        Options &operator=(const Options &) = delete;
-        Options &operator=(Options &&) = delete;
+        Parser(const Parser &) = delete;
+        Parser(Parser &&) = delete;
+        Parser &operator=(const Parser &) = delete;
+        Parser &operator=(Parser &&) = delete;
 
         void add_flag(const std::string &long_name, char short_name, const std::string &description);
 

@@ -5,11 +5,11 @@
 #include <vector>
 
 #include "Option.hpp"
-#include "Options.hpp"
+#include "Parser.hpp"
 
 namespace Options
 {
-    struct Options::Impl
+    struct Parser::Impl
     {
         // This will throw an exception if the option is not found.
         std::vector<Option>::const_iterator find_option_by_long_name(const std::string &name) const
@@ -52,47 +52,47 @@ namespace Options
         std::vector<std::string> _positional;
     };
 
-    Options::Options() : _impl(new Impl) {}
+    Parser::Parser() : _impl(new Impl) {}
 
-    Options::~Options()
+    Parser::~Parser()
     {
         delete _impl;
     }
 
-    void Options::add_flag(const std::string &long_name, char short_name, const std::string &description)
+    void Parser::add_flag(const std::string &long_name, char short_name, const std::string &description)
     {
         _impl->add({long_name, short_name, description});
     }
 
-    void Options::add_flag(const std::string &long_name, const std::string &description)
+    void Parser::add_flag(const std::string &long_name, const std::string &description)
     {
         add_flag(long_name, Option::SHORT_NOT_USED, description);
     }
 
-    void Options::add_optional(const std::string &long_name, char short_name, const std::string &description,
-                               const std::string &default_value, validator_t validator)
+    void Parser::add_optional(const std::string &long_name, char short_name, const std::string &description,
+                              const std::string &default_value, validator_t validator)
     {
         _impl->add({long_name, short_name, description}).set_optional(default_value).set_validator(validator);
     }
 
-    void Options::add_optional(const std::string &long_name, const std::string &description,
-                               const std::string &default_value, validator_t validator)
+    void Parser::add_optional(const std::string &long_name, const std::string &description,
+                              const std::string &default_value, validator_t validator)
     {
         add_optional(long_name, Option::SHORT_NOT_USED, description, default_value, validator);
     }
 
-    void Options::add_mandatory(const std::string &long_name, char short_name, const std::string &description,
-                                validator_t validator)
+    void Parser::add_mandatory(const std::string &long_name, char short_name, const std::string &description,
+                               validator_t validator)
     {
         _impl->add({long_name, short_name, description}).set_mandatory().set_validator(validator);
     }
 
-    void Options::add_mandatory(const std::string &long_name, const std::string &description, validator_t validator)
+    void Parser::add_mandatory(const std::string &long_name, const std::string &description, validator_t validator)
     {
         add_mandatory(long_name, Option::SHORT_NOT_USED, description, validator);
     }
 
-    bool Options::parse(int argc, const char *const *argv, int start_idx)
+    bool Parser::parse(int argc, const char *const *argv, int start_idx)
     {
         int pos = start_idx;
 
@@ -140,42 +140,42 @@ namespace Options
         return std::all_of(_impl->_options.cbegin(), _impl->_options.cend(), NON_MANDATORY_OR_FOUND);
     }
 
-    size_t Options::positional_count() const
+    size_t Parser::positional_count() const
     {
         return _impl->_positional.size();
     }
 
-    const std::string &Options::positional(size_t idx) const
+    const std::string &Parser::positional(size_t idx) const
     {
         return _impl->_positional.at(idx);
     }
 
-    int32_t Options::as_int(const std::string &name) const
+    int32_t Parser::as_int(const std::string &name) const
     {
         return _impl->find_option_by_long_name(name)->as_int();
     }
 
-    uint32_t Options::as_uint(const std::string &name) const
+    uint32_t Parser::as_uint(const std::string &name) const
     {
         return _impl->find_option_by_long_name(name)->as_uint();
     }
 
-    double Options::as_double(const std::string &name) const
+    double Parser::as_double(const std::string &name) const
     {
         return _impl->find_option_by_long_name(name)->as_double();
     }
 
-    bool Options::as_bool(const std::string &name) const
+    bool Parser::as_bool(const std::string &name) const
     {
         return _impl->find_option_by_long_name(name)->as_bool();
     }
 
-    const std::string &Options::as_string(const std::string &name) const
+    const std::string &Parser::as_string(const std::string &name) const
     {
         return _impl->find_option_by_long_name(name)->as_string();
     }
 
-    std::string Options::get_possible_options() const
+    std::string Parser::get_possible_options() const
     {
         std::stringstream sstream;
 

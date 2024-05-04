@@ -9,7 +9,6 @@ Checks:          '-checks=-*,bugprone-*,clang-analyzer-*,cppcoreguidelines-*,rea
 
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
-AnalyzeTemporaryDtors: false
 FormatStyle: none
 CheckOptions:
     - key: readability-identifier-naming.ClassCase
