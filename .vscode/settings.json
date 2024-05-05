@@ -8,10 +8,21 @@
         "build_*/**": true
     },
     "cSpell.words": [
+        "boolalpha",
         "bugprone",
         "Constexpr",
+        "cout",
         "cppcoreguidelines",
+        "cstdint",
+        "endl",
+        "iostream",
         "positionals",
         "Struct"
-    ]
+    ],
+    "files.associations": {
+        ".clang-tidy": "yaml",
+        ".clang-format": "yaml",
+        "*.yml": "yaml",
+        "ostream": "cpp"
+    }
 }

@@ -7,13 +7,11 @@ int main(int argc, char *argv[])
 {
     Options::Parser args_parser;
 
-    args_parser.add_flag("help", 'h', "This help is accessible via short and long option");
-    args_parser.add_flag("verbose", 'v', "Verbose - accessible via -v and --verbose");
+    args_parser.add_mandatory("config", 'c', "Configuration file");
     args_parser.add_optional(
         "level", "Debug level, one of none, debug, error - it is checked by the validator", "none",
         [](const std::string &value) { return (value == "none" || value == "debug" || value == "error"); });
 
-    args_parser.add_mandatory("config", 'c', "Configuration file");
     args_parser.add_optional("int", 'i', "Some small integer in range <-10..10> as checked by validator", "4",
                              [](const std::string &value) {
                                  int32_t num = Options::as_int(value);
@@ -26,6 +24,8 @@ int main(int argc, char *argv[])
 
     args_parser.add_optional("bf", "Boolean value", "false");
     args_parser.add_optional("bt", "Boolean value", "true");
+    args_parser.add_flag("help", 'h', "This help is accessible via short and long option");
+    args_parser.add_flag("verbose", 'v', "Verbose - accessible via -v and --verbose");
 
     using std::cout;
     using std::endl;
@@ -39,16 +39,16 @@ int main(int argc, char *argv[])
 
     cout << std::boolalpha;
     cout << "Options:" << endl;
-    cout << " verbose : " << args_parser.as_bool("verbose") << endl;
-    cout << " level   : " << args_parser.as_string("level") << endl;
     cout << " config  : " << args_parser.as_string("config") << endl;
+    cout << " level   : " << args_parser.as_string("level") << endl;
     cout << " int     : " << args_parser.as_int("int") << endl;
     cout << " double  : " << args_parser.as_double("double") << endl;
     cout << " bf      : " << args_parser.as_bool("bf") << endl;
     cout << " bt      : " << args_parser.as_bool("bt") << endl;
+    cout << " verbose : " << args_parser.as_bool("verbose") << endl;
 
     // positional arguments are all the strings after "--" separator, for example:
-    // ./example -c config_file.txt -v -- these strings are positional arguments
+    // ./example_full -c config_file.txt -v -- these strings are positional arguments
     if (args_parser.positional_count() > 0)
     {
         cout << "Positional parameters:" << endl;

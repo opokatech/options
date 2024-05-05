@@ -1,2 +1,5 @@
-add_executable(example example.cpp)
-target_link_libraries(example PRIVATE options options_compile_flags)
+add_executable(example_simple example_simple.cpp)
+target_link_libraries(example_simple PRIVATE options options_compile_flags)
+
+add_executable(example_full example_full.cpp)
+target_link_libraries(example_full PRIVATE options options_compile_flags)

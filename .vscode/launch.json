@@ -29,10 +29,10 @@
             ]
         },
         {
-            "name": "Example call (gdb)",
+            "name": "Example full call (gdb)",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build_example_debug/example",
+            "program": "${workspaceFolder}/build_example_debug/example_full",
             "args": ["-c", "some_config", "-v", "-d", "5.12"],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
@@ -52,10 +52,10 @@
             ]
         },
         {
-            "name": "Example call (lldb)",
+            "name": "Example full call (lldb)",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build_example_debug/example",
+            "program": "${workspaceFolder}/build_example_debug/example_full",
             "args": ["-c", "some_config", "-v", "-d", "5.12"],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
