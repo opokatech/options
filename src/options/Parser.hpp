@@ -12,7 +12,7 @@ namespace Options
      * This class defines expected and possible options passed to the program.
      *
      * There are 3 types of options:
-     * - flag - which takes no arguments and can be set or not,
+     * - flag - which takes no arguments and can be set or not - is like an optional boolean with default false,
      * - optional - which takes an argument, but only optionally. If not provided a defined default
      *   is used,
      * - mandatory - which takes an argument which must be provided.
@@ -27,9 +27,15 @@ namespace Options
      * Optional and mandatory options may have a validator, which simply returns true if a value
      * that suppose to be used is correct.
      *
-     * When object of this class during parsing parameters encounters standalone "--" then it stops
+     * When an object of this class during parsing parameters encounters standalone "--" then it stops
      * looking for defined parameters and treat everything after that as positional arguments. They
      * can be accessed via the api below.
+     *
+     * Retrieving values of options is done by calling as_int, as_uint, as_double, as_bool or as_string.
+     * Retrieving not defined option will throw an exception.
+     *
+     * Getting positional arguments is done by calling positional_count and positional.
+     * Getting positional argument out of bounds will throw an exception.
      *
      * Extensive example of how to use this class is in example/example.cpp.
      */

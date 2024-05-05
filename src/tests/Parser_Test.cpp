@@ -78,6 +78,7 @@ TEST_CASE("Parser")
             REQUIRE(parser.as_string("opt") == "false");
             REQUIRE(parser.as_bool("opt") == false);
             REQUIRE(parser.as_bool("only_long"));
+            REQUIRE_THROWS(parser.as_string("non-existing").empty());
 
             REQUIRE(parser.positional_count() == 3);
             REQUIRE(parser.positional(0) == "whatever");
