@@ -5,9 +5,6 @@
 
 int main(int argc, char *argv[])
 {
-    using std::cout;
-    using std::endl;
-
     Options::Parser args_parser;
 
     args_parser.add_flag("help", 'h', "This help is accessible via short and long option");
@@ -29,6 +26,9 @@ int main(int argc, char *argv[])
 
     args_parser.add_optional("bf", "Boolean value", "false");
     args_parser.add_optional("bt", "Boolean value", "true");
+
+    using std::cout;
+    using std::endl;
 
     if (!args_parser.parse(argc, argv) || args_parser.as_bool("help"))
     {
