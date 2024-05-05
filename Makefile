@@ -44,10 +44,10 @@ testcov:
 	cmake -S . -B build_testcov -DUSE_TESTS=ON -GNinja -DCMAKE_CXX_FLAGS=--coverage
 	cmake --build build_testcov
 	ctest --test-dir build_testcov/src/tests -V
-	lcov -c -d build_testcov/src --exclude /usr/include/ \
-                                 --exclude catch2/ \
-                                 --exclude tests/ \
-                                 -v -o build_testcov/tracelog.lcov
+	lcov -c -d build_testcov/src --exclude "/usr/include/*" \
+                                 --exclude "*catch2/*" \
+                                 --exclude "*tests/*" \
+                                 -o build_testcov/tracelog.lcov
 	genhtml build_testcov/tracelog.lcov -o build_testcov/html >/dev/null 2>&1 || echo "genhtml failed"
 
 __build:
