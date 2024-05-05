@@ -15,3 +15,5 @@ enable_testing()
 
 add_executable(${PROJECT_NAME}_tests Option_Test.cpp Parser_Test.cpp)
 target_link_libraries(${PROJECT_NAME}_tests PRIVATE options options_tests_compile_flags Catch2WithMain)
+
+add_test(NAME ${PROJECT_NAME}_tests COMMAND ${PROJECT_NAME}_tests)
