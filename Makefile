@@ -15,6 +15,7 @@ all:
 	@echo "  example   - build example program"
 	@echo "  examplerpi- build example program for Raspberry Pi 3+"
 	@echo "  tests     - build tests and run"
+	@echo "  testcov   - build tests with coverage and run them"
 	@echo "  clean     - cleans build directory"
 	@echo "  cleanall  - removes build directories"
 	@echo "  format    - use clang-format on C/C++ files in ${SOURCE_DIRS}"
@@ -36,6 +37,19 @@ examplerpi:
 tests:
 	@make TESTS=ON example
 	@./build_example_${BUILD_TYPE_LC}/options_tests
+
+testcov:
+	@rm -rf build_testcov
+	mkdir build_testcov
+	cmake -S . -B build_testcov -DUSE_TESTS=ON -GNinja -DCMAKE_CXX_FLAGS=--coverage
+	cmake --build build_testcov
+	ctest --test-dir build_testcov/src/tests -V
+	lcov -c -d build_testcov/src/options -o build_testcov/tracelog.lcov
+	lcov -c -d build_testcov/src --exclude /usr/include/ \
+	                             --exclude catch2/ \
+								 --exclude tests/ \
+								 -o build_testcov/tracelog.lcov
+	genhtml build_testcov/tracelog.lcov -o build_testcov/html >/dev/null 2>&1 || echo "genhtml failed"
 
 __build:
 	@if [ ${BUILD_TYPE} != "Debug" -a ${BUILD_TYPE} != "Release" ]; then \

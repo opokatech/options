@@ -1,0 +1,28 @@
+name: Test coverage
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - src/**
+      - cmake/**
+      - CMakeLists.txt
+      - Makefile
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: get the code
+      uses: actions/checkout@v4.1.4
+
+    - name: install ninja and lcov
+      run: sudo apt-get install ninja-build lcov
+
+    - name: build and run the tests
+      run: make testcov
+
+    - name: coveralls
+      uses: coverallsapp/github-action@v2

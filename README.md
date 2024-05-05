@@ -1,5 +1,8 @@
 # Options
 
+[![Cpp Standard](https://img.shields.io/badge/C%2B%2B-11-blue.svg)](https://en.wikipedia.org/wiki/C%2B%2B11)
+[![Coverage Status](https://coveralls.io/repos/github/opokatech/options/badge.svg?branch=master)](https://coveralls.io/github/opokatech/options?branch=master)
+
 This is yet another alternative for parsing command line options in C++.
 
 The main design criteria were:
