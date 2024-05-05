@@ -123,10 +123,9 @@ namespace Options
                         if (!iter->set_value(argv[pos]))
                             return false;
                     }
-                    else // must be a flag
+                    else // no arguments, so it is a flag
                     {
-                        if (!iter->set_value("true"))
-                            return false;
+                        iter->set_value("true");
                     }
                 }
             }

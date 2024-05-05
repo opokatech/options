@@ -28,6 +28,18 @@ TEST_CASE("Parser")
         REQUIRE_THROWS(parser.positional(0) == "a");
         REQUIRE_THROWS(parser.positional(1) == "a");
 
+        SECTION("Getting possible options")
+        {
+            const auto possible_options = parser.get_possible_options();
+
+            // only check if the options are there
+            REQUIRE(possible_options.find("--mode ") != std::string::npos);
+            REQUIRE(possible_options.find("--opt ") != std::string::npos);
+            REQUIRE(possible_options.find("--only_long ") != std::string::npos);
+            REQUIRE(possible_options.find("--verbose ") != std::string::npos);
+            REQUIRE(possible_options.find("--non-existing ") == std::string::npos);
+        }
+
         SECTION("Missing mandatory")
         {
             const char *argv[] = {"prg", "-v"};
@@ -98,6 +110,8 @@ TEST_CASE("Parser")
                             [](const std::string &value) { return value == "slow" || value == "fast"; });
         parser.add_optional("height", 'h', "Height", "low",
                             [](const std::string &value) { return value == "low" || value == "high"; });
+        parser.add_optional("integer", "Any integer signed or not", "0");
+        parser.add_optional("float", "Any floating point value", "0");
 
         SECTION("no parameters")
         {
@@ -113,6 +127,12 @@ TEST_CASE("Parser")
             REQUIRE(parser.as_string("color") == "none");
             REQUIRE(parser.as_string("speed") == "slow");
             REQUIRE(parser.as_string("height") == "low");
+            REQUIRE(parser.as_string("integer") == "0");
+            REQUIRE(parser.as_string("float") == "0");
+
+            REQUIRE(parser.as_int("integer") == 0);
+            REQUIRE(parser.as_uint("integer") == 0);
+            REQUIRE(parser.as_double("float") == 0.0);
         }
 
         SECTION("setting flags")
@@ -136,11 +156,15 @@ TEST_CASE("Parser")
 
         SECTION("setting optional without validator with any value is OK")
         {
-            const char *argv[] = {"prg", "--mode", "some_mode"};
+            const char *argv[] = {"prg", "--mode", "some_mode", "--integer", "42", "--float", "3.14"};
             const size_t ARGC = sizeof(argv) / sizeof(char *);
 
             REQUIRE(parser.parse(ARGC, argv));
             REQUIRE(parser.as_string("mode") == "some_mode");
+
+            REQUIRE(parser.as_int("integer") == 42);
+            REQUIRE(parser.as_uint("integer") == 42);
+            REQUIRE(parser.as_double("float") == 3.14);
         }
 
         SECTION("setting optional without validator with any value via short name is OK")
