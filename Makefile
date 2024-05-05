@@ -44,7 +44,6 @@ testcov:
 	cmake -S . -B build_testcov -DUSE_TESTS=ON -GNinja -DCMAKE_CXX_FLAGS=--coverage
 	cmake --build build_testcov
 	ctest --test-dir build_testcov/src/tests -V
-	lcov -c -d build_testcov/src/options -o build_testcov/tracelog.lcov
 	lcov -c -d build_testcov/src --exclude /usr/include/ \
 	                             --exclude catch2/ \
 								 --exclude tests/ \
