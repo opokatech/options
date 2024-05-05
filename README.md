@@ -93,9 +93,38 @@ A similar example, but with validation of data can be found [here](src/example/e
 
 This library can be used in a few ways:
 
-A simplest and not recommended way is to copy `src/options` directory to your project and add the files in there to the compilation process either by hand OR by including only this directory via `add_subdirectory`. After all the whole library is just 7 files.
+Using cmake the easiest way seems to be using
+[FetchContent](https://cmake.org/cmake/help/latest/module/FetchContent.html) mechanism:
 
-Another option is to clone the whole repository and add it via `add_subdirectory`:
+```cmake
+include(FetchContent)
+
+FetchContent_Declare(
+    options
+    GIT_REPOSITORY https://github.com/opokatech/options
+    GIT_TAG v3.0.0
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE)
+FetchContent_MakeAvailable(options)
+
+# ....
+
+add_executable(example my_main.cpp)
+target_link_libraries(example PRIVATE options)
+```
+
+Another option is to clone the whole repository as a [git submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules)
+and add it via `add_subdirectory`:
+
+```bash
+git submodule add https://github.com/opokatech/options externals/options
+
+# optionally checkout some particular version:
+cd externals/options
+git checkout v3.0.0
+```
+
+And then in your CMakeLists.txt:
 
 ```cmake
 add_subdirectory(external/options) # location of the cloned repository
@@ -104,7 +133,12 @@ add_executable(example my_main.cpp)
 target_link_libraries(example PRIVATE options)
 ```
 
-## Some notes:
+And there is of course the most simple and **not recommended** way:
+copying `src/options` directory to your project and adding the files from it to
+the compilation process. Either by hand OR by including only the `options` directory
+via `add_subdirectory`. After all the whole library consists of just 7 files.
+
+## Some notes
 
 * an option may have an argument or not. An option without an argument is a flag,
 * an option is always identified by a long name. A long name is used with 2 dashes in front of it,
