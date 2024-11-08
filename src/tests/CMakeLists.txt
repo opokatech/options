@@ -1,6 +1,6 @@
 include(FetchContent)
 
-set(CATCH2_GIT_TAG v3.5.2)
+set(CATCH2_GIT_TAG v3.7.1)
 FetchContent_Declare(
     Catch2
     GIT_REPOSITORY https://github.com/catchorg/Catch2.git
