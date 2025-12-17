@@ -87,7 +87,7 @@ Positional parameters:
 
 ```
 
-A similar example, but with validation of data can be found [here](src/example/example_full.cpp).
+A similar [example, but with data validation](src/example/example_full.cpp) can be found in `src/example`.
 
 ## How to compile it
 
