@@ -67,13 +67,13 @@ namespace Options
         };
 
         char _short_name = SHORT_NOT_USED;
-        std::string _long_name;
-        std::string _description;
+        std::string _long_name{};
+        std::string _description{};
         validator_t _validator = nullptr;
         Type _type = Type::Flag;
-        std::string _default_value;
+        std::string _default_value{};
 
         bool _was_set = false;
-        std::string _value;
+        std::string _value{};
     };
 } // namespace Options

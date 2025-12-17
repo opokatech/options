@@ -47,9 +47,9 @@ namespace Options
             return _options.back();
         }
 
-        std::vector<Option> _options;
+        std::vector<Option> _options{};
         uint32_t _longest_option_name = 0;
-        std::vector<std::string> _positional;
+        std::vector<std::string> _positional{};
     };
 
     Parser::Parser() : _impl(new Impl) {}
