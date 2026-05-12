@@ -1,6 +1,4 @@
-tags
 build*
-compile_commands.json
 .cache
 *.swp
 .vscode

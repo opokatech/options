@@ -14,10 +14,14 @@
         "cout",
         "cppcoreguidelines",
         "cstdint",
+        "ctest",
+        "DCMAKE",
         "endl",
+        "genhtml",
         "iostream",
         "positionals",
-        "Struct"
+        "Struct",
+        "testcov"
     ],
     "files.associations": {
         ".clang-tidy": "yaml",

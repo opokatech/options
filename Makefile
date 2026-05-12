@@ -4,7 +4,6 @@ BUILD_TYPE?=Debug
 # Build type lower case
 BUILD_TYPE_LC=`echo ${BUILD_TYPE} | tr [:upper:] [:lower:]`
 
-# CMAKE_FLAGS=--warn-uninitialized
 SOURCE_DIRS=src
 
 all:
@@ -22,8 +21,6 @@ all:
 
 example:
 	@make BUILD_DIR=build_$@_${BUILD_TYPE_LC} EXAMPLE=ON __build
-	@rm -f compile_commands.json
-	@ln -s build_$@_${BUILD_TYPE_LC}/compile_commands.json .
 
 tests:
 	@make TESTS=ON example
@@ -56,10 +53,9 @@ clean:
 	@if [ -d build_example_${BUILD_TYPE_LC} ] ; then \
 		cmake --build build_example_${BUILD_TYPE_LC} --target clean ; \
 		fi
-	@rm -f compile_commands.json
 
 cleanall:
-	@rm -rf build_* compile_commands.json
+	@rm -rf build_*
 
 format:
 	find ${SOURCE_DIRS} -type f -name "*.[ch]" -o -name "*.[ch]pp" -exec clang-format -i {} \;
