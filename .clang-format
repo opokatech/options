@@ -34,6 +34,6 @@ NamespaceIndentation: All
 ObjCBlockIndentWidth: 4
 SpaceBeforeInheritanceColon: false
 SpaceBeforeRangeBasedForLoopColon: false
-Standard: c++17
+Standard: c++11
 TabWidth: 4
 UseTab: Never

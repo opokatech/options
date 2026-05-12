@@ -41,23 +41,19 @@ namespace Options
         {
             _options.emplace_back(opt);
 
-            if (opt.long_name().size() > _longest_option_name)
-                _longest_option_name = opt.long_name().size();
+            _longest_option_name = std::max<uint32_t>(opt.long_name().size(), _longest_option_name);
 
             return _options.back();
         }
 
-        std::vector<Option> _options{};
+        std::vector<Option> _options;
         uint32_t _longest_option_name = 0;
-        std::vector<std::string> _positional{};
+        std::vector<std::string> _positional;
     };
 
     Parser::Parser() : _impl(new Impl) {}
 
-    Parser::~Parser()
-    {
-        delete _impl;
-    }
+    Parser::~Parser() {}
 
     void Parser::add_flag(const std::string &long_name, char short_name, const std::string &description)
     {
@@ -101,11 +97,15 @@ namespace Options
         while (pos < argc)
         {
             if (collect_positionals)
+            {
                 _impl->_positional.push_back(argv[pos]);
+            }
             else
             {
                 if (strcmp(argv[pos], "--") == 0)
+                {
                     collect_positionals = true;
+                }
                 else
                 {
                     auto iter = _impl->find_option_by_name_with_dashes(argv[pos]);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 #include <string>
 
 #include "Validator.hpp"
@@ -82,6 +83,6 @@ namespace Options
 
     private:
         struct Impl;
-        Impl *_impl = nullptr;
+        std::unique_ptr<Impl> _impl;
     };
 } // namespace Options

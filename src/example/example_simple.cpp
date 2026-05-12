@@ -37,7 +37,9 @@ int main(int argc, char *argv[])
             cout << " [" << i << "]: " << args_parser.positional(i) << endl;
     }
     else
+    {
         cout << "No positional parameters." << endl;
+    }
 
     return 0;
 }

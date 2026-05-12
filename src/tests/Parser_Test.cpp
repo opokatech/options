@@ -30,14 +30,14 @@ TEST_CASE("Parser")
 
         SECTION("Getting possible options")
         {
-            const auto possible_options = parser.get_possible_options();
+            const auto POSSIBLE_OPTIONS = parser.get_possible_options();
 
             // only check if the options are there
-            REQUIRE(possible_options.find("--mode ") != std::string::npos);
-            REQUIRE(possible_options.find("--opt ") != std::string::npos);
-            REQUIRE(possible_options.find("--only_long ") != std::string::npos);
-            REQUIRE(possible_options.find("--verbose ") != std::string::npos);
-            REQUIRE(possible_options.find("--non-existing ") == std::string::npos);
+            REQUIRE(POSSIBLE_OPTIONS.find("--mode ") != std::string::npos);
+            REQUIRE(POSSIBLE_OPTIONS.find("--opt ") != std::string::npos);
+            REQUIRE(POSSIBLE_OPTIONS.find("--only_long ") != std::string::npos);
+            REQUIRE(POSSIBLE_OPTIONS.find("--verbose ") != std::string::npos);
+            REQUIRE(POSSIBLE_OPTIONS.find("--non-existing ") == std::string::npos);
         }
 
         SECTION("Missing mandatory")
@@ -156,7 +156,7 @@ TEST_CASE("Parser")
 
         SECTION("setting optional without validator with any value is OK")
         {
-            const char *argv[] = {"prg", "--mode", "some_mode", "--integer", "42", "--float", "3.14"};
+            const char *argv[] = {"prg", "--mode", "some_mode", "--integer", "42", "--float", "1.0"};
             const size_t ARGC = sizeof(argv) / sizeof(char *);
 
             REQUIRE(parser.parse(ARGC, argv));
@@ -164,7 +164,7 @@ TEST_CASE("Parser")
 
             REQUIRE(parser.as_int("integer") == 42);
             REQUIRE(parser.as_uint("integer") == 42);
-            REQUIRE(parser.as_double("float") == 3.14);
+            REQUIRE(parser.as_double("float") == 1.0);
         }
 
         SECTION("setting optional without validator with any value via short name is OK")
